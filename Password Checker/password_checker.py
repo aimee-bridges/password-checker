@@ -13,7 +13,6 @@ def load_common_passwords():
         with open(file_path, "r") as file:
             return set(line.strip().lower() for line in file)
     except FileNotFoundError:
-        # If the file doesn't exist, return an empty set
         print("Error: 'common_passwords.txt' file not found.")
         return set()
 
@@ -47,24 +46,41 @@ def check_password_strength(password):
 
     return feedback
 
-# Example usage
+# Display password requirements
+def print_requirements():
+    print("\n🔒 Password Requirements:")
+    print("- Minimum 12 characters")
+    print("- At least one uppercase letter (A–Z)")
+    print("- At least one lowercase letter (a–z)")
+    print("- At least one number (0–9)")
+    print("- At least one special character (!@#$%^&* etc.)")
+    print("- Must not be a common password\n")
+
+# Main program loop
 if __name__ == "__main__":
     # Load the common passwords
     common_passwords = load_common_passwords()
 
-    # Prompt the user for a password to check
-    password_to_check = input("🔐 Enter a password to check: ")
+    # Print the requirements
+    print_requirements()
 
-    # Check if the password is common
-    if is_common_password(password_to_check, common_passwords):
-        print("\n❌ The password is too common. Please choose a more unique password.")
-    else:
+    while True:
+        # Prompt the user for a password to check
+        password_to_check = input("🔐 Enter a password to check: ")
+
+        # Check if the password is common
+        if is_common_password(password_to_check, common_passwords):
+            print("❌ The password is too common. Please choose a more unique password.\n")
+            continue
+
         # Check strength and print feedback
         strength_feedback = check_password_strength(password_to_check)
 
         if not strength_feedback:
-            print("\n✅ Strong password!")
+            print("\n✅ Strong password accepted!")
+            break
         else:
             print("\nPassword Strength Feedback:")
             for item in strength_feedback:
                 print(item)
+            print("\nPlease try again.\n")
